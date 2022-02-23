@@ -11,5 +11,6 @@ package imagePROCESS is
    function imageLOG (inputImage : ImageMatrix) return ImageMatrix;
    function imageSTRETCH (inputImage : ImageMatrix; iMin : Integer ; iMax : Integer) return ImageMatrix;
    function makeHIST (inputImage : ImageMatrix) return Histogram;
+   function histEQUAL (inputImage : ImageMatrix) return ImageMatrix;
 
 end imagePROCESS;

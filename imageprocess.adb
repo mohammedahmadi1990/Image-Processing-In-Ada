@@ -65,6 +65,12 @@ package body imagePROCESS is
       maxCol : Integer := inputImage'Length(1);
       maxRow : Integer := inputImage'Length(2);
    begin
+      
+      -- init
+      for h in 1 .. 255 loop
+         output(h) := 0;
+      end loop;
+      
       for h in 1 .. 255 loop              -- histogram intensity array (1~255)
          for i in 1 .. maxRow loop        -- pixels in row
             for j in 1 .. maxCol loop     -- pixels in column
@@ -76,5 +82,59 @@ package body imagePROCESS is
       end loop; 
       return output;
    end makeHIST;
+   
+   -- Histogram equalization function
+   function histEQUAL (inputImage : ImageMatrix) return ImageMatrix is   
+      maxCol : Integer := inputImage'Length(1);
+      maxRow : Integer := inputImage'Length(2);
+      outputImage : ImageMatrix(1 .. maxCol , 1 .. maxRow);
+      hist : Histogram(1 .. 255);
+      pdf : Histofloat(1 .. 255);
+      ch : Histofloat(1 .. 255);
+      MN : Float;
+   begin
+      
+      -- init
+      for h in 1 .. 255 loop
+         hist(h) := 0;
+      end loop;
+      
+      -- STEP II
+      for h in 1 .. 255 loop              -- histogram intensity array (1~255)
+         for i in 1 .. maxRow loop        -- pixels in row
+            for j in 1 .. maxCol loop     -- pixels in column
+               if inputImage(j,i) = h  then
+                  hist(h) := hist(h) + 1;
+               end if;
+            end loop; 
+         end loop; 
+      end loop; 
+            
+      -- STEP II
+      MN := Float(maxRow*maxCol);
+      for h in 1 .. 255 loop     -- intensities
+         pdf(h) := Float(hist(h))/MN;
+      end loop;
+      
+      -- STEP III
+      ch(1) := pdf(1);
+      for h in 2 .. 255 loop     -- intensities
+         ch(h) := ch(h-1) + pdf(h);         
+      end loop;
+      
+      -- STEP IV
+      for h in 1 .. 255 loop     -- intensities
+         ch(h) := ch(h) * 255.0;         
+      end loop;
+      
+      -- STEP V
+      for i in 1 .. maxRow loop        -- pixels in row
+         for j in 1 .. maxCol loop     -- pixels in column
+            outputImage(j,i) := Integer(ch(inputImage(j,i)));
+         end loop; 
+      end loop;            
+            
+      return outputImage;
+   end histEQUAL;
    
 end imagePROCESS;

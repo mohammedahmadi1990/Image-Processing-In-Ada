@@ -86,6 +86,7 @@ begin
       matrix02 : ImageMatrix(1 .. maxCol , 1 .. maxRow);
       matrix03 : ImageMatrix(1 .. maxCol , 1 .. maxRow);
       hist : Histogram(1 .. 255);
+      matrix04 : ImageMatrix(1 .. maxCol , 1 .. maxRow);
    begin
 
       -- READ FILE
@@ -96,9 +97,10 @@ begin
       matrix02 := imagePROCESS.imageLOG(matrix00);             -- Log transform
       matrix03 := imagePROCESS.imageSTRETCH(matrix00,64,251);  -- Contrast stretching
       hist := imagePROCESS.makeHIST(matrix00);                 -- Histogram
+      matrix04 := imagePROCESS.histEQUAL(matrix00);            -- Histogram Equalization
 
       -- Save Image
-      imagePGM.writePGM(To_String(fn),matrix01,maxCol,maxRow,maxValue);
+      imagePGM.writePGM(To_String(fn),matrix04,maxCol,maxRow,maxValue);
       Put("File saved!");
    end;
 
