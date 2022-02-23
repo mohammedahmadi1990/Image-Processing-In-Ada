@@ -5,6 +5,7 @@ with Ada.Strings.Unbounded.Text_IO; use Ada.Strings.Unbounded.Text_IO;
 with Ada.Exceptions;                use Ada.Exceptions;
 with imagePGM;                      use imagePGM;
 with imagePROCESS;                  use imagePROCESS;
+with Ada.Task_Identification;  use Ada.Task_Identification;
 
 procedure Image is
 
@@ -49,8 +50,10 @@ procedure Image is
             when Name_Error =>
                -- check
                Put_Line ("File does not exist!");
+               Abort_Task (Current_Task);
             when others =>
                Put_Line ("Error while processing input file");
+               Abort_Task (Current_Task);
         end;
       elsif flag = "w" then
          --  Write user input (PGM Image File)
